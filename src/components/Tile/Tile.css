@@ -1,0 +1,54 @@
+.game-board {
+    display: grid;
+    grid-template-rows: repeat(100, 40px);
+    grid-template-columns: repeat(100, 40px);
+    gap: 0;
+    transform-origin: 0 0;
+  }
+  
+  .tile {
+    width: 40px;
+    height: 40px;
+    background-color: #f0f0f0;
+    border: solid 1px #ccc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+  
+  .marker {
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+  }
+  
+  .marker.warrior {
+    background-color: #ff0000;
+    color: #ffffff;
+  }
+  
+  .marker.settlement {
+    background-color: #00ff00;
+    color: #ffffff;
+  }
+  
+  .marker.production {
+    background-color: #0000ff;
+    color: #ffffff;
+  }
+  
+  .resource {
+    background-image: url('../../../node_modules/bootstrap-icons/icons/dot.svg');
+    background-size: cover;
+  }
+  
+  .base {
+    background-image: url('../../../node_modules/bootstrap-icons/icons/fullscreen-exit.svg');
+    background-size: cover;
+  }
+  
