@@ -1,16 +1,17 @@
 import React, { useEffect } from 'react';
 import Tile from '../Tile/Tile';
 import { useState } from 'react';
-import { useEffectOnce } from 'react-use';
 
 const GameBoard = () => {
-  const [types, setTypes] = useState([]);
-  const [contents, setContents] = useState([]);
-  const [colors, setColors] = useState([]);
-  const [occupations, setOccupations] = useState([]);
+  const [types, setTypes] = useState([]); // resource, base, empty
+  const [factions, setFactions] = useState([]); // belongs to what faction
+  const [occupations, setOccupations] = useState([]); // is occupied by a unit
   const [scale, setScale] = useState(1);
   const [translateX, setTranslateX] = useState(0);
   const [translateY, setTranslateY] = useState(0);
+  const [units, setUnits] = useState([]);
+  const [isReady, setIsReady] = useState(false);
+
   let isDragging = false;
   let dragStartX = 0;
   let dragStartY = 0;
@@ -50,13 +51,27 @@ const GameBoard = () => {
     isDragging = false;
   };
 
-  useEffectOnce(() => {
-    console.log('Gameboard mounted');
-    GameBoard();
-    setInterval(() => {
+  useEffect(() => {
+    const generatedTypes = Array.from({ length: size * size }, getRandomType);
+    setOccupations(Array.from({ length: size * size }, () => false));
+    setBases(generatedTypes);
+    setUnits(Array.from({ length: 1 }, () => [0, 0, "worker", 0]));
+
+    setIsReady(true);
+  }, []);
+
+  useEffect(() => {
+    if (!isReady) {
+      return;
+    }
+
+    // Start the interval
+    const interval = setInterval(() => {
       handleGameAction();
     }, 5000);
-  });
+
+    return () => clearInterval(interval);
+  }, [isReady]);
 
   const handleGameAction = () => {
     console.log('Game action');
@@ -68,33 +83,30 @@ const GameBoard = () => {
       { dx: 0, dy: 1 }, // Down
     ];
 
-    const trueIndexes = occupations.reduce((indexes, occupation, index) => {
-      if (occupation) {
-        indexes.push(index);
-      }
-      return indexes;
-    }, []);
-
-    console.log(trueIndexes);
-
     setOccupations((prevOccupations) => {
       const newOccupations = [...prevOccupations];
+      setFactions((prevFactions) => {
+        const newFactions = [...prevFactions];
+        units.forEach((unit) => {
+          const x = unit[0];
+          const y = unit[1];
 
-      trueIndexes.forEach((index) => {
-        const x = index % size;
-        const y = Math.floor(index / size);
+          const randomDirection =
+            directions[Math.floor(Math.random() * directions.length)];
+          const newX = x + randomDirection.dx;
+          const newY = y + randomDirection.dy;
 
-        const randomDirection =
-          directions[Math.floor(Math.random() * directions.length)];
-        const newX = x + randomDirection.dx;
-        const newY = y + randomDirection.dy;
-
-        if (newX >= 0 && newX < size && newY >= 0 && newY < size) {
-          const newIndex = newY * size + newX;
-          newOccupations[newIndex] = true;
-          newOccupations[index] = false;
-        }
-      });
+          if (newX >= 0 && newX < size && newY >= 0 && newY < size) {
+            unit[0] = newX;
+            unit[1] = newY;
+            const newIndex = newY * size + newX;
+            newOccupations[newIndex] = true;
+            newOccupations[y * size + x] = false;
+            newFactions[newIndex] = unit[3];
+          }
+        });
+        return newFactions;
+    });
       return newOccupations;
     });
   };
@@ -106,8 +118,7 @@ const GameBoard = () => {
         <Tile
           key={i}
           type={types[i]}
-          content={contents[i]}
-          factionColor={colors[i]}
+          factionColor={factions[i]}
           isOccupied={occupations[i]}
         />
       );
@@ -129,24 +140,6 @@ const GameBoard = () => {
     return typesEnum[randomIndex];
   };
 
-  const getRandomOccupation = () => {
-    const randomIndex = Math.floor(Math.random() * 2);
-    if (Math.random() < 0.999) {
-      return false;
-    }
-    return randomIndex === 0;
-  };
-
-  const getRandomColor = () => {
-    const colors = ['red', 'blue', 'green', 'yellow'];
-    const randomIndex = Math.floor(Math.random() * colors.length);
-    return colors[randomIndex];
-  };
-
-  const getRandomContent = () => {
-    return '';
-  };
-
   const getRandomCoordinates = () => {
     const coordinates = [];
     const numCoordinates = baseCount;
@@ -158,11 +151,19 @@ const GameBoard = () => {
     };
 
     const isValidCoordinate = (coord, existingCoordinates) => {
+      const [x, y] = coord;
+      const isNextToBorder = x === 0 || x === size - 1 || y === 0 || y === size - 1;
+
+      if (isNextToBorder) {
+        return false;
+      }
+
       for (const existingCoord of existingCoordinates) {
         if (isNeighbor(coord, existingCoord)) {
           return false;
         }
       }
+
       return true;
     };
 
@@ -180,22 +181,23 @@ const GameBoard = () => {
   };
 
   const setBases = (generatedTypes) => {
-    const bases = getRandomCoordinates();
+    return new Promise((resolve) => {
+      const bases = getRandomCoordinates();
+      let factions = Array.from({ length: size * size }, () => -1);
+      let factionIndex = 0;
 
-    for (const [x, y] of bases) {
-      const index = y * size + x;
-      generatedTypes[index] = 'base';
-    }
-
-    setTypes(generatedTypes);
-  };
-
-  const GameBoard = () => {
-    const generatedTypes = Array.from({ length: size * size }, getRandomType);
-    setContents(Array.from({ length: size * size }, getRandomContent));
-    setColors(Array.from({ length: size * size }, getRandomColor));
-    setOccupations(Array.from({ length: size * size }, getRandomOccupation));
-    setBases(generatedTypes);
+      for (const [x, y] of bases) {
+        const index = y * size + x;
+        generatedTypes[index] = 'base';
+        factions[index] = factionIndex;
+        factions[index - 1] = factionIndex;
+        factions[index - 1 + size] = factionIndex;
+        factionIndex++;
+      }
+      setFactions(factions);
+      setTypes(generatedTypes);
+      resolve();
+    });
   };
 
   return (
