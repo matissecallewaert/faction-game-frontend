@@ -8,7 +8,11 @@ const Tile = ({ type, factionColor, isOccupied }) => {
   };
 
   return (
-    <div className={`tile ${type} ${isOccupied ? 'occupied' : ''} faction_${factionColor}`}>
+    <div
+      className={`tile ${type} ${
+        isOccupied ? 'occupied' : ''
+      } faction_${factionColor}`}
+    >
       {getTileContent()}
     </div>
   );
