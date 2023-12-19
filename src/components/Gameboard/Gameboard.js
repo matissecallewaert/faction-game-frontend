@@ -1,7 +1,13 @@
 import React, { useEffect } from 'react';
 import Tile from '../Tile/Tile';
 import { useReducer, useState } from 'react';
-import { getRandomType, getRandomCoordinates, getRandomNumber, size, directions } from '../../utils';
+import {
+  getRandomType,
+  getRandomCoordinates,
+  getRandomNumber,
+  size,
+  directions,
+} from '../../utils';
 import logger from '../../logger';
 
 const GameBoard = () => {
@@ -59,7 +65,12 @@ const GameBoard = () => {
 
         state.occupations = Array.from({ length: size * size }, () => false);
         state.types = Array.from({ length: size * size }, getRandomType);
-        state.units = Array.from({ length: 10 }, () => [getRandomNumber(), getRandomNumber(), 'worker', 0]);
+        state.units = Array.from({ length: 10 }, () => [
+          getRandomNumber(),
+          getRandomNumber(),
+          'worker',
+          0,
+        ]);
         state.factions = Array.from({ length: size * size }, () => -1);
 
         let factionIndex = 0;
@@ -81,7 +92,8 @@ const GameBoard = () => {
           const x = unit[0];
           const y = unit[1];
 
-          const randomDirection = directions[Math.floor(Math.random() * directions.length)];
+          const randomDirection =
+            directions[Math.floor(Math.random() * directions.length)];
           const newX = x + randomDirection.dx;
           const newY = y + randomDirection.dy;
 

@@ -1,11 +1,11 @@
 export const size = 100;
 export const baseCount = 10;
 export const directions = [
-    { dx: -1, dy: 0 }, // Left
-    { dx: 1, dy: 0 }, // Right
-    { dx: 0, dy: -1 }, // Up
-    { dx: 0, dy: 1 }, // Down
-  ];
+  { dx: -1, dy: 0 }, // Left
+  { dx: 1, dy: 0 }, // Right
+  { dx: 0, dy: -1 }, // Up
+  { dx: 0, dy: 1 }, // Down
+];
 
 export const getRandomType = () => {
   const typesEnum = ['resource', ''];
@@ -63,5 +63,5 @@ export const getRandomCoordinates = () => {
 };
 
 export const getRandomNumber = () => {
-    return Math.floor(Math.random() * size);
+  return Math.floor(Math.random() * size);
 };
