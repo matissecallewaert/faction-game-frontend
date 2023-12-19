@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import Tile from '../Tile/Tile';
 import { useReducer, useState } from 'react';
 import { getRandomType, getRandomCoordinates, getRandomNumber, size, directions } from '../../utils';
+import logger from '../../logger';
 
 const GameBoard = () => {
   const [isReady, setIsReady] = useState(false);
@@ -31,7 +32,7 @@ const GameBoard = () => {
   }, [isReady]);
 
   const handleGameAction = () => {
-    console.log('Game action');
+    logger.info('Game action');
 
     dispatch({ type: 'UPDATE_UNITS', payload: { state } });
   };
@@ -54,12 +55,13 @@ const GameBoard = () => {
   function gameReducer(state, action) {
     switch (action.type) {
       case 'INITIALIZE_BOARD':
+        const bases = getRandomCoordinates();
+
         state.occupations = Array.from({ length: size * size }, () => false);
         state.types = Array.from({ length: size * size }, getRandomType);
         state.units = Array.from({ length: 10 }, () => [getRandomNumber(), getRandomNumber(), 'worker', 0]);
-
-        const bases = getRandomCoordinates();
         state.factions = Array.from({ length: size * size }, () => -1);
+
         let factionIndex = 0;
 
         for (const [x, y] of bases) {
@@ -75,20 +77,18 @@ const GameBoard = () => {
         return { ...state, ...action.payload };
 
       case 'UPDATE_UNITS':
-
         state.units.map((unit) => {
-          console.log(unit);
           const x = unit[0];
           const y = unit[1];
 
-          const randomDirection =
-            directions[Math.floor(Math.random() * directions.length)];
+          const randomDirection = directions[Math.floor(Math.random() * directions.length)];
           const newX = x + randomDirection.dx;
           const newY = y + randomDirection.dy;
 
           if (newX >= 0 && newX < size && newY >= 0 && newY < size) {
             unit[0] = newX;
             unit[1] = newY;
+
             const newIndex = newY * size + newX;
             state.occupations[newIndex] = true;
             state.occupations[y * size + x] = false;
@@ -98,7 +98,6 @@ const GameBoard = () => {
         });
         return { ...state };
 
-      // Add other cases for different actions
       default:
         return state;
     }
