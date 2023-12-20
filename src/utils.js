@@ -1,5 +1,6 @@
 export const size = 100;
 export const baseCount = 10;
+export const maxMoves = 10;
 export const directions = [
   { dx: -1, dy: 0 }, // Left
   { dx: 1, dy: 0 }, // Right
@@ -21,9 +22,9 @@ export const getRandomType = () => {
   return typesEnum[randomIndex];
 };
 
-export const getRandomCoordinates = () => {
+export const getRandomCoordinates = (amount) => {
   const coordinates = [];
-  const numCoordinates = baseCount;
+  const numCoordinates = amount;
 
   const isNeighbor = (coord1, coord2) => {
     const [x1, y1] = coord1;
