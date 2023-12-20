@@ -1,16 +1,16 @@
 .game-board {
     display: grid;
-    grid-template-rows: repeat(100, 40px);
-    grid-template-columns: repeat(100, 40px);
+    grid-template-rows: repeat(100, 20px);
+    grid-template-columns: repeat(100, 20px);
     gap: 0;
     transform-origin: 0 0;
   }
   
 .tile {
-  width: 40px;
-  height: 40px;
-  background-color: #f0f0f0;
-  border: solid 1px #ccc;
+  width: 20px;
+  height: 20px;
+  background-color: #e6e6e6;
+  border: solid 1px #c0c0c0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -28,13 +28,41 @@
 }
 
 .resource {
-  background-image: url('../../../node_modules/bootstrap-icons/icons/dot.svg');
+  background-image: url('../../assets/dot.svg');
   background-size: cover;
 }
 
 .base {
-  background-image: url('../../../node_modules/bootstrap-icons/icons/fullscreen-exit.svg');
+  background-image: url('../../assets/base.svg');
   background-size: cover;
+}
+
+.worker {
+  background-image: url('../../assets/pickaxe.svg');
+  background-size: cover;
+  height: 19px;
+  width: 19px;
+}
+
+.warrior {
+  background-image: url('../../assets/sword.svg');
+  background-size: cover;
+  height: 15px;
+  width: 15px;
+}
+
+.healer {
+  background-image: url('../../assets/healer.svg');
+  background-size: cover;
+  height: 15px;
+  width: 15px;
+}
+
+.bomb {
+  background-image: url('../../assets/bomb.svg');
+  background-size: cover;
+  height: inherit;
+  width: inherit;
 }
 
 .faction_0 {

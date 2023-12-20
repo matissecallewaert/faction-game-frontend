@@ -8,6 +8,7 @@ import {
   size,
   directions,
 } from '../../utils';
+import { pawnTypes } from '../../pawns';
 import logger from '../../logger';
 
 const GameBoard = () => {
@@ -16,9 +17,13 @@ const GameBoard = () => {
   const initialState = {
     types: [], // resource, base, empty
     factions: [], // belongs to what faction
-    occupations: [], // is occupied by a unit
     units: [],
+    unitsOnBoard: [], // index of units on the board, when no unit on that tile, it's -1
+    gold: [], // gold of each faction
+    bombed: [], // index of the faction to what the bom belongs to, -1 if no bomb
+    bases: [], // index of the position of the base and boolean if it's destroyed of each faction
   };
+  const pawns = Object.values(pawnTypes);
   const [state, dispatch] = useReducer(gameReducer, initialState);
 
   useEffect(() => {
@@ -46,14 +51,25 @@ const GameBoard = () => {
   const renderBoard = () => {
     let board = [];
     for (let i = 0; i < size * size; i++) {
-      board.push(
-        <Tile
-          key={i}
-          type={state.types[i]}
-          factionColor={state.factions[i]}
-          isOccupied={state.occupations[i]}
-        />
-      );
+      if(state.unitsOnBoard[i] === -1) {
+        board.push(
+          <Tile
+            key={i}
+            type={state.types[i]}
+            factionColor={state.factions[i]}
+            unit={undefined}
+          />
+        );
+      }else {
+        board.push(
+          <Tile
+            key={i}
+            type={state.types[i]}
+            factionColor={state.factions[i]}
+            unit={state.units[state.unitsOnBoard[i]]}
+          />
+        );
+      }
     }
     return board;
   };
@@ -63,21 +79,28 @@ const GameBoard = () => {
       case 'INITIALIZE_BOARD':
         const bases = getRandomCoordinates();
 
-        state.occupations = Array.from({ length: size * size }, () => false);
         state.types = Array.from({ length: size * size }, getRandomType);
-        state.units = Array.from({ length: 10 }, () => [
-          getRandomNumber(),
-          getRandomNumber(),
-          'worker',
-          0,
-        ]);
+        state.unitsOnBoard = Array.from({ length: size * size }, () => -1);
         state.factions = Array.from({ length: size * size }, () => -1);
 
-        let factionIndex = 0;
+        let units = [];
+        for (let i = 0; i < 10; i++) {
+          const x = getRandomNumber(size);
+          const y = getRandomNumber(size);
+          const index = y * size + x;
 
+          state.unitsOnBoard[index] = i;
+          state.factions[index] = i;
+          units.push([x, y, pawns[getRandomNumber(pawns.length)], i]);
+        }
+        state.units = units;
+        
+        let factionIndex = 0;
         for (const [x, y] of bases) {
           const index = y * size + x;
+
           state.types[index] = 'base';
+
           state.factions[index] = factionIndex;
           state.factions[index - 1] = factionIndex;
           state.factions[index - 1 + size] = factionIndex;
@@ -88,7 +111,7 @@ const GameBoard = () => {
         return { ...state, ...action.payload };
 
       case 'UPDATE_UNITS':
-        state.units.map((unit) => {
+        state.units.map((unit, index) => {
           const x = unit[0];
           const y = unit[1];
 
@@ -102,8 +125,8 @@ const GameBoard = () => {
             unit[1] = newY;
 
             const newIndex = newY * size + newX;
-            state.occupations[newIndex] = true;
-            state.occupations[y * size + x] = false;
+            state.unitsOnBoard[newIndex] = index;
+            state.unitsOnBoard[y * size + x] = -1;
             state.factions[newIndex] = unit[3];
           }
           return unit;

@@ -62,6 +62,6 @@ export const getRandomCoordinates = () => {
   return coordinates;
 };
 
-export const getRandomNumber = () => {
-  return Math.floor(Math.random() * size);
+export const getRandomNumber = (max) => {
+  return Math.floor(Math.random() * max);
 };
