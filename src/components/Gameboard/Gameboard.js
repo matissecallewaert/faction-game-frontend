@@ -15,6 +15,7 @@ import logger from '../../logger';
 
 const GameBoard = () => {
   const [isReady, setIsReady] = useState(false);
+  const [reset, setReset] = useState(false);
 
   const initialState = {
     types: [], // resource, base, empty
@@ -44,6 +45,13 @@ const GameBoard = () => {
 
     return () => clearInterval(interval);
   }, [isReady]);
+
+  useEffect(() => {
+    if (reset === true) {
+      dispatch({ type: 'INITIALIZE_BOARD', payload: { state } });
+      setReset(false);
+    }
+  }, [reset]);
 
   const handleGameAction = () => {
     logger.info('Game action');
@@ -134,6 +142,9 @@ const GameBoard = () => {
           return unit;
         });
         const it = state.amountOfMoves + 1;
+        if (it >= maxMoves) {
+          setReset(true);
+        }
         return { ...state, amountOfMoves: it };
 
       default:

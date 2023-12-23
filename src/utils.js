@@ -1,6 +1,6 @@
 export const size = 100;
 export const baseCount = 10;
-export const maxMoves = 10;
+export const maxMoves = 500;
 export const directions = [
   { dx: -1, dy: 0 }, // Left
   { dx: 1, dy: 0 }, // Right
