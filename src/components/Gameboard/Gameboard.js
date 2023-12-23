@@ -69,6 +69,7 @@ const GameBoard = () => {
             type={state.types[i]}
             factionColor={state.factions[i]}
             unit={undefined}
+            bombed={state.bombed[i]}
           />
         );
       }else {
@@ -94,7 +95,7 @@ const GameBoard = () => {
         state.unitsOnBoard = Array.from({ length: size * size }, () => -1);
         state.factions = Array.from({ length: size * size }, () => -1);
         state.gold = Array.from({ length: baseCount }, () => 1000);
-        state.bombed = Array.from({ length: size * size }, () => -1);
+        state.bombed = Array.from({ length: size * size }, () => false);
 
         let units = [];
         let basesOnBoard = [];
@@ -137,6 +138,9 @@ const GameBoard = () => {
             unit[0] = newIndex;
             state.unitsOnBoard[newIndex] = index;
             state.unitsOnBoard[y * size + x] = -1;
+            if(unit[1] === 'miner') {
+              state.bombed[y * size + x] = true;
+            }
             state.factions[newIndex] = unit[2];
           }
           return unit;
