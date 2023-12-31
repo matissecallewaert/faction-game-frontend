@@ -27,12 +27,12 @@
   font-size: 0.75rem;
 }
 
-.resource {
+.RESOURCE {
   background-image: url('../../assets/dot.svg');
   background-size: cover;
 }
 
-.base {
+.BASE {
   background-image: url('../../assets/base.svg');
   background-size: cover;
 }

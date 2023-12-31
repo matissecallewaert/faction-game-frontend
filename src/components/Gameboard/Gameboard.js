@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import Tile from '../Tile/Tile';
-import axios from 'axios';
 import GameApi from '../../api/GameApi';
 import FactionApi from '../../api/FactionApi';
 import TileApi from '../../api/TileApi';
@@ -15,21 +14,20 @@ const GameBoard = () => {
   useEffect(() => {
     const fetchGame = async () => {
       const currentGameRes = await GameApi.getCurrentGame();
-      setGame(currentGameRes);
 
       const gameId = currentGameRes.gameId;
       const [factionsRes, tilesRes] = await Promise.all([
         FactionApi.getFactions(gameId),
         TileApi.getTiles(gameId)
       ]);
-      
-      setFactions(factionsRes);
-      setTiles(tilesRes);
 
       const unitsRes = await Promise.all(factionsRes.map(faction => 
         UnitApi.getUnits(gameId, faction.id)
       ));
 
+      setGame(currentGameRes);
+      setFactions(factionsRes);
+      setTiles(tilesRes);
       setUnits(unitsRes.flat());
     };
 
@@ -40,7 +38,7 @@ const GameBoard = () => {
     return tiles.map((tile) => (
       <Tile
         key={tile.id}
-        type={tile.type}
+        type={tile.resourceType}
         factionColor={tile.factionId}
         unit={units.find(u => u.id === tile.unit)}
         bombed={tile.bombed}
