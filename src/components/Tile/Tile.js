@@ -1,14 +1,15 @@
 import React from 'react';
 import './Tile.css';
+import { UNITTYPE } from '../../constants/UnitTypes';
 
 const Tile = ({ type, factionColor, unit, bombed }) => {
   const getTileContent = () => {
     if (unit !== undefined) {
-      if (unit[1] === 'worker') return <div className="worker"></div>;
-      else if (unit[1] === 'warrior') return <div className="warrior"></div>;
-      else if (unit[1] === 'miner') return <div>M</div>;
-      else if (unit[1] === 'healer') return <div className="healer"></div>;
-      else if (unit[1] === 'unit') return <div>U</div>;
+      if (unit.type === UNITTYPE.WORKER) return <div className="worker"></div>;
+      else if (unit.type === UNITTYPE.WARRIOR) return <div className="warrior"></div>;
+      else if (unit.type === UNITTYPE.MINER) return <div>M</div>;
+      else if (unit.type === UNITTYPE.HEALER) return <div className="healer"></div>;
+      else if (unit.type === UNITTYPE.UNIT) return <div>U</div>;
     }
 
     if(bombed){
