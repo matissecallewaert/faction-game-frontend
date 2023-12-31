@@ -13,6 +13,7 @@ const GameBoard = () => {
 
   useEffect(() => {
     const fetchGame = async () => {
+      console.log('Rendering Gameboard...');
       const currentGameRes = await GameApi.getCurrentGame();
 
       const gameId = currentGameRes.gameId;
@@ -31,7 +32,7 @@ const GameBoard = () => {
       setUnits(unitsRes.flat());
     };
 
-    fetchGame();
+    setInterval(fetchGame, 5000);
   }, []);
 
   const renderBoard = () => {
