@@ -1,6 +1,6 @@
 import ApiInstance from "./ApiInstance";
 
-class TileApi {
+class UnitApi {
     async getUnit(gameId, factionId, id) {
         const response = await ApiInstance.getApi().get("/unit/" + gameId + "/" + factionId + "/" + id);
         return response.data.data;
@@ -12,4 +12,4 @@ class TileApi {
     }
 }
 
-export default new TileApi();
+export default new UnitApi();

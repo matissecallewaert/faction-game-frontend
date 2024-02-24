@@ -1,6 +1,6 @@
 export const UNITTYPE = {
     WORKER: "WORKER",
-    UNIT: "UNIT",
+    PIONEER: "PIONEER",
     WARRIOR: "WARRIOR",
     HEALER: "HEALER",
     MINER: "MINER",

@@ -9,7 +9,7 @@ const Tile = ({ type, factionColor, unit, bombed }) => {
       else if (unit.type === UNITTYPE.WARRIOR) return <div className="warrior"></div>;
       else if (unit.type === UNITTYPE.MINER) return <div>M</div>;
       else if (unit.type === UNITTYPE.HEALER) return <div className="healer"></div>;
-      else if (unit.type === UNITTYPE.UNIT) return <div>U</div>;
+      else if (unit.type === UNITTYPE.PIONEER) return <div>P</div>;
     }
 
     if(bombed){
@@ -20,9 +20,8 @@ const Tile = ({ type, factionColor, unit, bombed }) => {
 
   return (
     <div
-      className={`tile ${type} ${
-        unit ? 'occupied' : ''
-      } faction_${factionColor}`}
+      className={`tile ${type}
+      faction_${factionColor}`}
     >
       {getTileContent()}
     </div>
