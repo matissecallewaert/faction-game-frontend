@@ -4,6 +4,7 @@ import GameApi from '../../api/GameApi';
 import FactionApi from '../../api/FactionApi';
 import TileApi from '../../api/TileApi';
 import UnitApi from '../../api/UnitApi';
+import './Gameboard.css';
 
 const GameBoard = () => {
   const [game, setGame] = useState(null);

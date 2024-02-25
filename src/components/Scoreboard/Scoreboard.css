@@ -1,0 +1,44 @@
+.score-board {
+    font-family: Arial, sans-serif;
+    margin-top: 1rem;
+    margin-left: 0.2rem;
+    margin-right: 0.2rem;
+  }
+  
+  .score-board table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .score-board th, .score-board td {
+    padding: 5px;
+    text-align: right;
+  }
+  
+  .score-board th {
+    background-color: #681d1d;
+    color: white;
+    font-size: 12px;
+  }
+  
+  .score-board td {
+    font-size: 11px;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .score-board tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+  
+  .score-board tr:hover {
+    background-color: #ddd;
+  }
+  
+  /* Responsive adjustments for very small screens */
+  @media (max-width: 400px) {
+    .score-board th, .score-board td {
+      padding: 4px;
+      font-size: 10px;
+    }
+  }
+  
